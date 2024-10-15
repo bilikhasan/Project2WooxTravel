@@ -13,6 +13,8 @@ namespace Project2WooxTravel.Areas.Admin.Controllers
     {
         // GET: Admin/Category
         TravelContext context = new TravelContext();
+
+        [Authorize]
         public ActionResult CategoryList()
         {
             var values = context.Categories.ToList();

@@ -22,13 +22,14 @@ namespace Project2WooxTravel.Areas.Admin.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public ActionResult CreateDestination(Destination destination)
         {
             context.Destinations.Add(destination);
             context.SaveChanges();
             return RedirectToAction("DestinationList", "Destination", "Admin");
-                                        //View              Controler   Area
+                                        //View           Controller      Area
         }
         public ActionResult DeleteDestination(int id)
         {

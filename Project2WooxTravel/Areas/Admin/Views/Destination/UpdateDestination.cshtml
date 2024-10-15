@@ -1,6 +1,6 @@
 ﻿@model Project2WooxTravel.Entities.Destination
 @{
-    ViewBag.Title = "CreateDestination";
+    ViewBag.Title = "UpdateDestination";
     Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
 }
 
@@ -15,6 +15,8 @@
                     <div class="card-body">
 
                         <form method="post">
+                            @Html.HiddenFor(x=>x.DestinationId)
+
                             <label>Ülke Adı</label>
                             @Html.TextBoxFor(x => x.Country, new { @class = "form-control" })
                             <br />
@@ -42,16 +44,11 @@
                             <label>Açıklama</label>
                             @Html.TextAreaFor(x => x.Description, 5, 0, new { @class = "form-control" })
                             <br />
-
-                            <button class="btn btn-primary">Tur Rotasını Oluştur</button>
+                            <button class="btn btn-success">Tur Rotasını Güncelle</button>
                         </form>
-
-
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
