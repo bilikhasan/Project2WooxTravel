@@ -27,5 +27,17 @@ namespace Project2WooxTravel.Controllers
         {
             return PartialView();
         }
+        public ActionResult PartialBanner()
+        {
+            return PartialView();
+        }
+        public ActionResult PartialCountry()
+        {
+            return PartialView();
+        }
+        public ActionResult PartialFooter()
+        {
+            return PartialView();
+        }
     }
 }

@@ -720,6 +720,9 @@
     <Content Include="Views\Default\PartialHead.cshtml" />
     <Content Include="Views\Default\PartialScript.cshtml" />
     <Content Include="Views\Default\PartialNavbar.cshtml" />
+    <Content Include="Views\Default\PartialBanner.cshtml" />
+    <Content Include="Views\Default\PartialCountry.cshtml" />
+    <Content Include="Views\Default\PartialFooter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
