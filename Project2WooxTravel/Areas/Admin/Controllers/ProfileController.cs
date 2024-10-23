@@ -18,7 +18,6 @@ namespace Project2WooxTravel.Areas.Admin.Controllers
         {
             var a = Session["x"];
             var values = context.Admins.Where(x => x.Username == a).FirstOrDefault();
-
             return View(values);
         }
     }
