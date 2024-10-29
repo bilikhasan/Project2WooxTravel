@@ -1,0 +1,84 @@
+﻿
+@{
+    ViewBag.Title = "Line";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+@if (ViewBag.MessageSubjects != null && ViewBag.MessageCounts != null)
+{
+    <div class="d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 51.8px);">
+        <div class="card" style="width: 80%;">
+            <div class="card-header">
+                <div class="card-title">Konu Başlıklarına Göre Toplam Mesaj Sayıları Grafiği</div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js için veri hazırlama
+        var ctx = document.getElementById("lineChart").getContext("2d");
+        var myLineChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.MessageSubjects)),
+                datasets: [{
+                    label: "Mesaj Sayısı",
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.MessageCounts)),
+                    borderColor: "#1d7af3",
+                    pointBorderColor: "#FFF",
+                    pointBackgroundColor: "#1d7af3",
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 4,
+                    pointHoverBorderWidth: 1,
+                    pointRadius: 4,
+                    backgroundColor: "transparent",
+                    fill: true,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1 // Y ekseninde birer birer artmasını sağlar
+                        }
+                    }
+                },
+                legend: {
+                    position: "bottom",
+                    labels: {
+                        padding: 10,
+                        fontColor: "#1d7af3"
+                    }
+                },
+                tooltips: {
+                    bodySpacing: 4,
+                    mode: "nearest",
+                    intersect: 0,
+                    position: "nearest",
+                    xPadding: 10,
+                    yPadding: 10,
+                    caretPadding: 10
+                },
+                layout: {
+                    padding: { left: 15, right: 15, top: 15, bottom: 15 }
+                }
+            }
+        });
+    </script>
+}
+else
+{
+    <p>Veri bulunamadı veya yüklenemedi.</p>
+}

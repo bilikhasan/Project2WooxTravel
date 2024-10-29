@@ -1,0 +1,73 @@
+﻿﻿
+@{
+    ViewBag.Title = "Doughnut";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+
+
+@{
+    ViewBag.Title = "Doughnut Chart";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+@if (ViewBag.DestinationTitles != null && ViewBag.DestinationPrices != null)
+{
+    <div class="d-flex justify-content-center align-items-center" style="padding-top: 100px; min-height: calc(100vh - 51.8px);">
+        <div class="card" style="width: 80%; max-width: 800px;">
+            <div class="card-header">
+                <div class="card-title">Destinasyon Ücretleri Grafiği</div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height: auto; width: 100%;">
+                    <canvas id="doughnutChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js için veri hazırlama
+        var ctx = document.getElementById("doughnutChart").getContext("2d");
+        var myDoughnutChart = new Chart(ctx, {
+            type: "doughnut",
+            data: {
+                labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.DestinationTitles)), // Başlıklar
+                datasets: [{
+                    label: "Ücretler",
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.DestinationPrices)), // Ücretler
+                    backgroundColor: [
+                        "#FF6384", // Renkler
+                        "#36A2EB",
+                        "#FFCE56",
+                        "#4BC0C0",
+                        "#9966FF",
+                        "#FF9F40"
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: "top",
+                },
+                title: {
+                    display: true,
+                    text: "Destinasyon Ücretleri"
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+    </script>
+}
+else
+{
+    <p>Veri bulunamadı veya yüklenemedi.</p>
+}

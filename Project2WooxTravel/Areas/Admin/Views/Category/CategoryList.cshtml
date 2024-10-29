@@ -1,4 +1,5 @@
-﻿@model List<Project2WooxTravel.Entities.Category>
+﻿﻿@using PagedList
+@model IPagedList<Project2WooxTravel.Entities.Category>
 
 @{
     ViewBag.Title = "CategoryList";
@@ -7,28 +8,6 @@
 
 <div class="container">
     <div class="page-inner">
-        <div class="page-header">
-            <h3 class="fw-bold mb-3">Tables</h3>
-            <ul class="breadcrumbs mb-3">
-                <li class="nav-home">
-                    <a href="#">
-                        <i class="icon-home"></i>
-                    </a>
-                </li>
-                <li class="separator">
-                    <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                    <a href="#">Tables</a>
-                </li>
-                <li class="separator">
-                    <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                    <a href="#">Basic Tables</a>
-                </li>
-            </ul>
-        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -36,13 +15,13 @@
                         <div class="card-title">Kategori İşlemleri</div>
                     </div>
                     <div class="card-body">
-                        <table class="table mt-3">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th scope="col">Kategori Id</th>
+                                    <th scope="col">#</th>
                                     <th scope="col">Kategori Adı</th>
-                                    <th scope="col">Sil</th>
                                     <th scope="col">Güncelle</th>
+                                    <th scope="col">Sil</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,13 +30,29 @@
                                     <tr>
                                         <td>@item.CategoryId</td>
                                         <td>@item.CategoryName</td>
-                                        <td><a href="#" class="btn btn-danger">Sil</a></td>
-                                        <td><a href="#" class="btn btn-success">Güncelle</a></td>
+                                        <td>
+                                            <a href="/Admin/Category/UpdateCategory/@item.CategoryId" class="btn btn-warning">Güncelle</a>
+                                        </td>
+                                        <td>
+                                            <a href="/Admin/Category/DeleteCategory/@item.CategoryId" class="btn btn-danger">Sil</a>
+                                        </td>
                                     </tr>
+
                                 }
                             </tbody>
                         </table>
-                        <a href="#" class="btn btn-primary">Yeni Kategori Girişi</a>
+
+
+                        @if (Model.PageCount > 1)
+                        {
+                            <div class="pagination">
+                                @for (int i = 1; i <= Model.PageCount; i++)
+                                {
+                                    <a href="@Url.Action("CategoryList", new { page = i })" class="btn btn-link">@i</a>
+                                }
+                            </div>
+                        }
+                        <a href="@Url.Action("CreateCategory", "Category")" class="btn btn-primary">Yeni Kategori Girişi</a>
                     </div>
                 </div>
             </div>

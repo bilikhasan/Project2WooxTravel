@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
@@ -12,12 +11,12 @@
         @Html.Action("PartialSideBar", "AdminLayout", "Admin")
 
 
-        @Html.Action("PartialNavbar" , "AdminLayout", "Admin")
+        @Html.Action("PartialNavbar", "AdminLayout", "Admin")
 
         @RenderBody()
 
         @Html.Action("PartialFooter", "AdminLayout", "Admin")
-   
+
     </div>
 
     @Html.Action("PartialScript", "AdminLayout", "Admin")

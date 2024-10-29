@@ -11,7 +11,10 @@ namespace Project2WooxTravel.Entities
         public string Name { get; set; }
         public string Phone { get; set; }
         public int PersonCount { get; set; }
-        public DateTime ReservationDate { get; set; }
         public string Description { get; set; }
+        public string Surname { get; set; }
+        public DateTime ReservationStartDate { get; set; }
+        public DateTime ReservationEndDate { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }
