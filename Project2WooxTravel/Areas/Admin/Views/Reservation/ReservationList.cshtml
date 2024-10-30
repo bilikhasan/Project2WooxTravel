@@ -1,0 +1,60 @@
+﻿﻿@using PagedList
+@model IPagedList<Project2WooxTravel.Entities.Reservation>
+
+@{
+    ViewBag.Title = "ReservationList";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+
+<div class="container">
+    <div class="page-inner">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Rezervasyon İşlemleri</div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table mt-3">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Ad Soyad</th>
+                                    <th scope="col">Telefon</th>
+                                    <th scope="col">Kişi Sayısı</th>
+                                    <th scope="col">Açıklama</th>
+                                    <th scope="col">Başlangıç Tarihi</th>
+                                    <th scope="col">Bitiş Tarihi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.ReservationId</td>
+                                        <td>@item.Name @item.Surname</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.PersonCount</td>
+                                        <td>@item.Description</td>
+                                        <td>@item.ReservationStartDate.ToShortDateString()</td>
+                                        <td>@item.ReservationEndDate.ToShortDateString()</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        @if (Model.PageCount > 1)
+                        {
+                            <div class="pagination">
+                                @for (int i = 1; i <= Model.PageCount; i++)
+                                {
+                                    <a href="@Url.Action("ReservationList", new { page = i })" class="btn btn-link">@i</a>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

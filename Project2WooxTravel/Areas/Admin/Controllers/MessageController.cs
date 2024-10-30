@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using PagedList;
@@ -58,9 +59,23 @@ namespace Project2WooxTravel.Areas.Admin.Controllers
             context.SaveChanges();
 
             return RedirectToAction("SendBox", "Message", new { area = "Admin" });
+        }
 
-
-
+        public ActionResult GetMessageDetail(int id)
+        {
+            var message = context.Messages.Find(id);
+            if(message!=null)
+            {
+                return Json(new
+                {
+                    sendermail = message.SenderMail,
+                    receiverMail = message.ReceiverMail,
+                    subject = message.Subject,
+                    sendDate = message.SendDate.ToString("dd.MM.yyyy HH:mm"),
+                    content = message.Content
+                }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(null);
         }
     }
 }

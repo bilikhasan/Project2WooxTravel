@@ -1,18 +1,19 @@
-﻿@model Project2WooxTravel.Entities.Admin
+﻿﻿@model Project2WooxTravel.Entities.Admin
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
 }
+
 <div class="container">
     <div class="page-inner">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Profile Bilgisi Düzenleme</div>
+                        <div class="card-title">Profil Bilgisi Düzenleme</div>
                     </div>
                     <div class="card-body">
-
                         <form method="post">
                             <label>Adınız</label>
                             @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
@@ -31,14 +32,9 @@
                             <br />
                             <button class="btn btn-success">Bilgileri Güncelle</button>
                         </form>
-
-
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
