@@ -3,13 +3,20 @@
 <div class="visit-country">
     <div class="container">
         <div class="row">
-            <div class="col-lg-5">
+            <div class="col-lg-12">
                 <div class="section-heading">
                     <h2>Popüler Tur ve Seyahat Rotalarımız</h2>
-                    <p>Dünyanın Dört Bir Noktasına Alanında Uzman Rehberler Eşliğinde Seyahate Çıkmaya Hazır Mısınız?</p>
+                    <p>
+                        Seyahat etmek, yeni kültürlerle tanışmak ve farklı deneyimler kazanmak isteyenler için vazgeçilmez bir tutku. Popüler tur ve seyahat rotalarımız ile hem yurt içinde hem de yurt dışında unutulmaz anılar biriktirmenizi sağlıyoruz. Türkiye’de Kapadokya’nın büyülü atmosferinden Ege’nin huzurlu sahillerine, Karadeniz’in yeşil yaylalarından İstanbul’un tarihi dokusuna kadar pek çok rota sizleri bekliyor. Yurt dışında ise Paris’in romantik sokaklarından Maldivler’in beyaz kumsallarına, Avrupa’nın kültürel başkentlerinden Uzak Doğu’nun egzotik destinasyonlarına kadar geniş bir yelpaze sunuyoruz. Herkesin seyahat tarzına uygun, kaliteli ve güvenli tur paketlerimizle yeni keşiflere çıkmaya hazır olun!
+                    </p>
                 </div>
+                <div class="alert alert-info">
+                    <marquee><h4>Son Eklenen Turlar</h4></marquee>
+                </div>
+                <br />
             </div>
         </div>
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="items">
@@ -21,7 +28,7 @@
                                     <div class="row">
                                         <div class="col-lg-4 col-sm-5">
                                             <div class="image">
-                                                <img src="@item.ImageUrl" alt="">
+                                                <img src="@item.ImageUrl" alt="@item.Title" class="destination-image" />
                                             </div>
                                         </div>
                                         <div class="col-lg-8 col-sm-7">
@@ -29,29 +36,92 @@
                                                 <h4>@item.Country</h4>
                                                 <span>@item.City</span>
                                                 <div class="main-button">
-                                                    <a href="about.html">Tur Detaylarını Gör</a>
+                                                    <a href="/Default/DestinationDetail/@item.DestinationId">Tur Detaylarını Gör</a>
                                                 </div>
-                                                <p>@item.Description</p>
+
+                                                <p class="description" id="description-@item.DestinationId">
+                                                    @item.Description.Substring(0, 350)...
+                                                    <a href="javascript:void(0);" class="read-more" data-full-description="@item.Description" data-short-description="@item.Description.Substring(0, 350)">Devamını Oku</a>
+                                                </p>
+
                                                 <ul class="info">
-                                                    <li><i class="fa fa-user"></i>@item.DayNight Gün - @(item.DayNight - 1) Gece</li>
-                                                    <li><i class="fa fa-globe"></i> @item.Price ₺</li>
-                                                    <li><i class="fa fa-home"></i> @item.Capacity Kişi</li>
+                                                    <li><i class="fa fa-calendar-days"></i> @item.DayNight Gün - @(item.DayNight - 1) Gece</li>
+                                                    <li><i class="fa fa-wallet"></i> @String.Format("{0:C0}", item.Price)₺</li>
+                                                    <li><i class="fa fa-users"></i> @item.Capacity Kişi</li>
                                                 </ul>
-                                                <div class="text-button">
-                                                    <a href="about.html">Rehberi Görün <i class="fa fa-arrow-right"></i></a>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         }
+                    </div>
 
-
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul class="page-numbers">
+                                @if (ViewBag.CurrentPage > 1)
+                                {
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="loadPage(@(ViewBag.CurrentPage - 1))">
+                                            <i class="fa fa-arrow-left"></i>
+                                        </a>
+                                    </li>
+                                }
+                                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                {
+                                    <li class="@(i == ViewBag.CurrentPage ? "active" : "")">
+                                        <a href="javascript:void(0);" onclick="loadPage(@i)">@i</a>
+                                    </li>
+                                }
+                                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                                {
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="loadPage(@(ViewBag.CurrentPage + 1))">
+                                            <i class="fa fa-arrow-right"></i>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    function loadPage(page) {
+        $.ajax({
+            url: '@Url.Action("PartialCountry", "Default")',
+            data: { page: page },
+            success: function (data) {
+                $('.visit-country').html(data);
+                bindReadMoreLinks();
+            }
+        });
+    }
+
+    function bindReadMoreLinks() {
+        const readMoreLinks = document.querySelectorAll('.read-more');
+        readMoreLinks.forEach(function (link) {
+            link.addEventListener('click', function () {
+                const fullDescription = this.getAttribute('data-full-description');
+                const shortDescription = this.getAttribute('data-short-description');
+
+                if (this.innerText === "Devamını Oku") {
+                    this.parentElement.innerHTML = fullDescription + ' <a href="javascript:void(0);" class="read-more" data-short-description="' + shortDescription + '" data-full-description="' + fullDescription + '">Daha Az Göster</a>';
+                    bindReadMoreLinks();
+                } else {
+                    this.parentElement.innerHTML = shortDescription + '... <a href="javascript:void(0);" class="read-more" data-short-description="' + shortDescription + '" data-full-description="' + fullDescription + '">Devamını Oku</a>';
+                    bindReadMoreLinks();
+                }
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        bindReadMoreLinks();
+    });
+</script>

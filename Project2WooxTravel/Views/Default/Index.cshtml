@@ -1,22 +1,9 @@
-﻿
+﻿﻿
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="en">
 
-@Html.Action("PartialHead", "Default")
+@Html.Action("PartialBanner", "Default")
 
-<body>
-
-    @Html.Action("PartialNavbar", "Default")
-
-    @Html.Action("PartialCountry", "Default")
-
-    @Html.Action("PartialFooter", "Default")
-
-    @Html.Action("PartialScript", "Default")
-
-</body>
-</html>
+@Html.Action("PartialCountry", "Default")

@@ -11,7 +11,7 @@ namespace Project2WooxTravel.Controllers
     public class DefaultController : Controller
     {
         TravelContext context = new TravelContext();
-        public ActionResult Index()
+        public ActionResult Index()                 //TICK
         {
             return View();
         }
@@ -27,15 +27,44 @@ namespace Project2WooxTravel.Controllers
         {
             return PartialView();
         }
-        public ActionResult PartialBanner()
+        public ActionResult PartialBanner()         //TICK
         {
-            return PartialView();
+            var last4Destination = context.Destinations.OrderByDescending(x => x.DestinationId).Take(4).ToList();
+            return PartialView(last4Destination);
         }
-        public ActionResult PartialCountry()
-        { 
-            var values = context.Destinations.ToList();
+        public ActionResult PartialCountry(int page = 1)        //TICK
+        {
+            int pageSize = 3;
+            var values = context.Destinations.OrderByDescending(x => x.DestinationId).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = Math.Ceiling((double)context.Destinations.Count() / pageSize);
+
+
             return PartialView(values);
         }
+
+        public ActionResult DestinationDetail(int id)           //TICK
+        {
+            var destination = context.Destinations.Find(id);
+            return View(destination);
+        }
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public ActionResult PartialFooter()
         {
             return PartialView();
