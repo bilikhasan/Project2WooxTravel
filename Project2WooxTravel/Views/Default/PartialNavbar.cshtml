@@ -1,4 +1,5 @@
-﻿
+﻿﻿@model Project2WooxTravel.Entities.Reservation
+
 <div id="js-preloader" class="js-preloader">
     <div class="preloader-inner">
         <span class="dot"></span>
@@ -9,32 +10,146 @@
         </div>
     </div>
 </div>
-<!-- ***** Preloader End ***** -->
-<!-- ***** Header Area Start ***** -->
 <header class="header-area header-sticky">
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <nav class="main-nav">
-                    <!-- ***** Logo Start ***** -->
-                    <a href="index.html" class="logo">
+                    <a href="/Default/Index/" class="logo">
                         <img src="/wooxtravel-1.0.0/assets/images/logo.png" alt="">
                     </a>
-                    <!-- ***** Logo End ***** -->
-                    <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                        <li><a href="index.html" class="active">Anasayfa</a></li>
-                        <li><a href="about.html">Hakkımızda</a></li>
-                        <li><a href="deals.html">Rotalar</a></li>
-                        <li><a href="reservation.html">Rezervasyon</a></li>
-                        <li><a href="reservation.html">Kayıt Ol</a></li>
+                        <li><a href="/Default/Index/" class="active">Ana Sayfa</a></li>
+                        <li>
+                            <button type="button" class="btn btn-primary" style="background-color: white; color: #22b3c1; border: none; font-weight:bold" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                                Rezervasyon Yap
+                            </button>
+
+                        </li>
                     </ul>
                     <a class='menu-trigger'>
                         <span>Menu</span>
                     </a>
-                    <!-- ***** Menu End ***** -->
                 </nav>
             </div>
         </div>
     </div>
 </header>
+
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Rezervasyon Oluştur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="/Default/ReservationModal/">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" style="color: black">Ad</label>
+                                <input type="text" class="form-control" name="Name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" style="color: black">Soyad</label>
+                                <input type="text" class="form-control" name="Surname" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" style="color: black">Telefon Numarası</label>
+                                <input type="text" class="form-control" name="Phone" id="phoneInput" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" style="color: black">Kişi Sayısı</label>
+                                <input type="number" class="form-control" name="PersonCount" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" style="color: black">Başlangıç Tarihi</label>
+                                <input type="date" class="form-control" name="ReservationStartDate" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label" style="color: black">Bitiş Tarihi</label>
+                                <input type="date" class="form-control" name="ReservationEndDate" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="color: black">Açıklama</label>
+                        <textarea class="form-control" name="Description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <button id="reservationCreate" type="submit" class="btn btn-primary" style="background-color: #22b3c1; color: white; border: none; font-weight: bold ">Oluştur</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        new Cleave('#phoneInput', {
+            delimiters: [' (', ') ', ' ', ' ', ' '],
+            blocks: [1, 3, 3, 2, 2],
+            numericOnly: true
+        });
+    });
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const reservationForm = document.querySelector('form[action="/Default/ReservationModal/"]');
+
+        reservationForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const formData = new FormData(reservationForm);
+
+            fetch(reservationForm.action, {
+                method: "POST",
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Başarılı!',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: 'Tamam'
+                        }).then(() => {
+                            window.location.href = '/Default/Index';
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Hata!',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'Tamam'
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        title: 'Hata!',
+                        text: 'Bir hata oluştu. Lütfen tekrar deneyin.',
+                        icon: 'error',
+                        confirmButtonText: 'Tamam'
+                    });
+                });
+        });
+    });
+</script>

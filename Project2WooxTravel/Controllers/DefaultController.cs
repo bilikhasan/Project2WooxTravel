@@ -15,15 +15,15 @@ namespace Project2WooxTravel.Controllers
         {
             return View();
         }
-        public ActionResult PartialHead()
+        public ActionResult PartialHead()           //TICK
         {
             return PartialView();
         }
-        public ActionResult PartialScript()
+        public ActionResult PartialScript()         //TICK
         {
             return PartialView();
         }
-        public ActionResult PartialNavbar()
+        public ActionResult PartialNavbar()         //TICK
         {
             return PartialView();
         }
