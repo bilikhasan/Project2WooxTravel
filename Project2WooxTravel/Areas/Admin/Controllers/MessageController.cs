@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
 using Project2WooxTravel.Context;
 using Project2WooxTravel.Entities;
 
@@ -11,20 +12,30 @@ namespace Project2WooxTravel.Areas.Admin.Controllers
     public class MessageController : Controller
     {
         TravelContext context = new TravelContext();
-        public ActionResult Inbox()
+        public ActionResult Inbox(int? page)
         {
-            var a = Session["x"];
-            var email = context.Admins.Where(x => x.Username == a).Select(y => y.Email).FirstOrDefault();
-            var values = context.Messages.Where(x => x.ReceiverMail == email).ToList();
-            return View(values);
+            var username = Session["user"];
+            var email = context.Admins.Where(x => x.Username == username).Select(y => y.Email).FirstOrDefault();
+            var incomingEmails = context.Messages.Where(x => x.ReceiverMail == email).ToList();
+
+            //Paging Yapısı
+            int pageSize = 5;               //Her sayfada 5 adet mesaj gösterilecek.
+            int pageNumber = (page ?? 1);   //"Eğer sol taraftaki değer null ise, sağ taraftaki değeri kullan" demektir.
+
+            return View(incomingEmails.ToPagedList(pageNumber, pageSize));
         }
 
-        public ActionResult SendBox()
+        public ActionResult SendBox(int? page)
         {
-            var a = Session["x"];
-            var email = context.Admins.Where(x => x.Username == a).Select(y => y.Email).FirstOrDefault();
-            var values = context.Messages.Where(x => x.SenderMail == email).ToList();
-            return View(values);
+            var username = Session["user"];
+            var email = context.Admins.Where(x => x.Username == username).Select(y => y.Email).FirstOrDefault();
+            var sentEmails = context.Messages.Where(x => x.SenderMail == email).ToList();
+
+            //Sayfalama
+            int pageSize = 5;                       //Hersayfada 5 mesaj
+            int pageNumber = (page ?? 1);           //"Eğer sol taraftaki değer null ise, sağ taraftaki değeri kullan" demektir.
+
+            return View(sentEmails.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult SendMessage()
@@ -35,14 +46,21 @@ namespace Project2WooxTravel.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult SendMessage(Message message)
         {
-            var a = Session["x"];
-            var email = context.Admins.Where(x => x.Username == a).Select(y => y.Email).FirstOrDefault();
-            message.SenderMail = email;
+
+            var username = Session["user"];
+            var email = context.Admins.Where(x => x.Username == username).Select(y => y.Email).FirstOrDefault();
+
+            message.SenderMail= email;
             message.SendDate = DateTime.Now;
             message.IsRead = false;
+
             context.Messages.Add(message);
             context.SaveChanges();
-            return RedirectToAction("Sendbox", "Message", new { area = "Admin" });
+
+            return RedirectToAction("SendBox", "Message", new { area = "Admin" });
+
+
+
         }
     }
 }

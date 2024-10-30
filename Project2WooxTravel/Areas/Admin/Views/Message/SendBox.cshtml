@@ -1,9 +1,17 @@
-﻿@model List<Project2WooxTravel.Entities.Message>
+﻿﻿@using PagedList
+@model IPagedList<Project2WooxTravel.Entities.Message>
+
 @{
     ViewBag.Title = "Sendbox";
     Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
-    int count = 0;
 }
+
+<!-- jQuery ve Bootstrap JavaScript dosyalarını yükleyin -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
 <div class="container">
     <div class="page-inner">
@@ -11,7 +19,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Giden Mesaj Sayfası</div>
+                        <div class="card-title">Giden Mesajlar</div>
                     </div>
                     <div class="card-body">
                         <table class="table mt-3">
@@ -22,24 +30,39 @@
                                     <th scope="col">Konu</th>
                                     <th scope="col">Tarih</th>
                                     <th scope="col">Durum</th>
+                                    <th scope="col">İşlemler</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                    count++;
                                     <tr>
-                                        <td>@count</td>
+                                        <td>@item.MessageId</td>
                                         <td>@item.ReceiverMail</td>
                                         <td>@item.Subject</td>
-                                        <td>@item.SendDate.ToShortDateString()</td>
-                                        <td>@item.IsRead</td>
-                                        <td><a href="#" class="btn btn-warning">Mesajı Aç</a></td>
+                                        <td>@item.SendDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <td>@(item.IsRead ? "Okundu" : "Okunmadı")</td>
+                                        <td>
+                                            <button class="btn btn-secondary openModal" data-id="@item.MessageId">Mesajı Aç</button>
+                                            <a href="#" class="btn btn-danger">Sil</a>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
-                        <a href="/Admin/Message/SendMessage/" class="btn btn-primary">Yeni Mesaj Gönderin</a>
+                        @if (Model.PageCount > 1)
+                        {
+                            <div class="pagination">
+                                @for (int i = 1; i <= Model.PageCount; i++)
+                                {
+                                    <a href="@Url.Action("Sendbox", new { page = i })" class="btn btn-link">@i</a>
+                                }
+                            </div>
+                        }
+                        <div class="d-flex justify-content-end">
+                            <a href="/Admin/Message/SendMessage/" class="btn btn-primary">Yeni Mesaj Gönderin</a>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -47,4 +70,54 @@
     </div>
 </div>
 
+<!-- Mesaj Detayları Modal -->
+<div class="modal fade" id="messageDetailModal" tabindex="-1" role="dialog" aria-labelledby="messageDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messageDetailModalLabel">Mesaj Detayları</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Kapat">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6><b>Alıcı:</b></h6>
+                <p id="receiverMail"></p>
+                <h6><b>Konu:</b></h6>
+                <p id="subject"></p>
+                <h6><b>Tarih:</b></h6>
+                <p id="sendDate"></p>
+                <h6><b>Mesaj:</b></h6>
+                <p id="content"></p>
+            </div>
+        </div>
+    </div>
+</div>
 
+<script>
+    $(document).ready(function () {
+        $('.openModal').click(function () {
+            var messageId = $(this).data('id');
+
+            $.ajax({
+                url: '@Url.Action("GetMessageDetail", "Message")',
+                type: 'GET',
+                data: { id: messageId },
+                success: function (data) {
+                    if (data) {
+                        $('#receiverMail').text(data.receiverMail);
+                        $('#subject').text(data.subject);
+                        $('#sendDate').text(data.sendDate);
+                        $('#content').text(data.content);
+                        $('#messageDetailModal').modal('show');
+                    } else {
+                        alert('Mesaj bulunamadı.');
+                    }
+                },
+                error: function () {
+                    alert('Bir hata oluştu.');
+                }
+            });
+        });
+    });
+</script>
