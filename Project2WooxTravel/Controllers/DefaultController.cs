@@ -11,28 +11,28 @@ namespace Project2WooxTravel.Controllers
     public class DefaultController : Controller
     {
         TravelContext context = new TravelContext();
-        public ActionResult Index()                 //TICK
+        public ActionResult Index()                 
         {
             return View();
         }
-        public ActionResult PartialHead()           //TICK
+        public ActionResult PartialHead()           
         {
             return PartialView();
         }
-        public ActionResult PartialScript()         //TICK
+        public ActionResult PartialScript()         
         {
             return PartialView();
         }
-        public ActionResult PartialNavbar()         //TICK
+        public ActionResult PartialNavbar()         
         {
             return PartialView();
         }
-        public ActionResult PartialBanner()         //TICK
+        public ActionResult PartialBanner()         
         {
             var last4Destination = context.Destinations.OrderByDescending(x => x.DestinationId).Take(4).ToList();
             return PartialView(last4Destination);
         }
-        public ActionResult PartialCountry(int page = 1)        //TICK
+        public ActionResult PartialCountry(int page = 1)        
         {
             int pageSize = 3;
             var values = context.Destinations.OrderByDescending(x => x.DestinationId).Skip((page - 1) * pageSize).Take(pageSize).ToList();
@@ -44,28 +44,36 @@ namespace Project2WooxTravel.Controllers
             return PartialView(values);
         }
 
-        public ActionResult DestinationDetail(int id)           //TICK
+        public ActionResult DestinationDetail(int id)           
         {
             var destination = context.Destinations.Find(id);
             return View(destination);
         }
 
-        
+        [HttpGet]
+        public ActionResult ReservationModal()
+        {
+            return PartialView();
+        }
 
+        [HttpPost]
+        public ActionResult ReservationModal (Reservation reservation)
+        {
+            try
+            {
+                reservation.CreatedAt = DateTime.Now;
+                context.Reservations.Add(reservation);
+                context.SaveChanges();
 
+                return Json(new { success = true, message = "Rezervasyon başarılı bir şekilde oluşturuldu :)" });
+            }
+            catch (Exception ex)
+            {
+                return Json (new {sucess=false, message="Rezervasyon oluşturulaMADI :("});
+            }
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-        public ActionResult PartialFooter()
+        public PartialViewResult PartialFooter()
         {
             return PartialView();
         }
