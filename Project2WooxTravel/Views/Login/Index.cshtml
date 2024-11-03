@@ -4,19 +4,63 @@
     Layout = null;
 }
 
-<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-<form method="post">
-    <div class="container">
-        <br /><br />
-        <div class="alert alert-warning"><h3>Kullanıcı Giriş Sayfası</h3></div>
 
-        <label>Kullanıcı Adınız</label>
-        @Html.TextBoxFor(x => x.Username, new { @class = "form-control" })
-        <br />
+<html>
 
-        <label>Şifreniz</label>
-        @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
-        <br />
-        <button class="btn btn-primary">Giriş Yap</button>
-    </div>
-</form>
+<body style="background-image: url('/content/bgimage.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <!-- Sayfa İçeriği -->
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+
+
+    <form method="post">
+        <div class="container d-flex justify-content-center">
+            <div class="col-md-6">
+                <br /><br />
+                <div class="text-center mb-4">
+                    <div class="alert alert-warning">
+                        <h3>Kullanıcı Giriş Sayfası</h3>
+                    </div>
+                </div>
+                <div class="mb-3 ">
+
+
+
+                    <strong> <label for="username" style="color:white">Kullanıcı Adınız</label></strong>
+                    @Html.TextBoxFor(x => x.Username, new { @class = "form-control", id = "username" })
+                </div>
+                <div class="mb-3">
+                    <strong> <label for="password" style="color:white">Şifreniz</label></strong>
+                    @Html.PasswordFor(x => x.Password, new { @class = "form-control", id = "password" })
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary">Giriş Yap</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+
+
+
+@{
+    var alertType = ViewBag.AlertType as string;
+    var alertMessage = ViewBag.AlertMessage as string;
+}
+
+@if (!string.IsNullOrEmpty(alertMessage))
+{
+    <script>
+        Swal.fire({
+            icon: 'error', // 'success', 'error', 'warning', 'info', 'question' gibi
+            title: 'Hata Mesajı',
+            text: '@alertMessage',
+            confirmButtonText: 'Tamam'
+        });
+    </script>
+}

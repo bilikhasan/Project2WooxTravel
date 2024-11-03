@@ -13,6 +13,8 @@ namespace Project2WooxTravel.Areas.Admin.Controllers
     public class MessageController : Controller
     {
         TravelContext context = new TravelContext();
+
+        
         public ActionResult Inbox(int? page)
         {
             var username = Session["user"];
@@ -25,7 +27,7 @@ namespace Project2WooxTravel.Areas.Admin.Controllers
 
             return View(incomingEmails.ToPagedList(pageNumber, pageSize));
         }
-
+       
         public ActionResult SendBox(int? page)
         {
             var username = Session["user"];

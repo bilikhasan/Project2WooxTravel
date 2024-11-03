@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -12,7 +13,7 @@ namespace Project2WooxTravel.Controllers
 {
     public class LoginController : Controller
     {
-        // GET: Login
+        
         TravelContext context = new TravelContext();
         public ActionResult Index()
         {
@@ -27,13 +28,24 @@ namespace Project2WooxTravel.Controllers
             if (values != null)
             {
                 FormsAuthentication.SetAuthCookie(values.Username, false);
-                Session["X"] = values.Username;
-                return RedirectToAction("Index", "Profile", new { area = "Admin" });
+                Session["user"] = values.Username;
+                
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
             else
             {
+                ViewBag.AlertType = "error";
+                ViewBag.AlertMessage = "Kullanıcı adı veya şifre hatalı. Tekrar deneyin.";
+
                 return View();
             }
+        }
+        public ActionResult LogOut()
+        {
+            FormsAuthentication.SignOut();
+            Session.Abandon();
+
+            return RedirectToAction("Index", "Login");
         }
     }
 }

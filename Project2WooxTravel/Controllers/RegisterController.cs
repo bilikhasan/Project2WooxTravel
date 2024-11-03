@@ -12,8 +12,8 @@ namespace Project2WooxTravel.Controllers
 {
     public class RegisterController : Controller
     {
-        // GET: Register
         TravelContext context = new TravelContext();
+
         public ActionResult Index()
         {
             return View();
